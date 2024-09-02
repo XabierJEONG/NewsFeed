@@ -10,4 +10,16 @@ public class UserRegisterRequestDto {
     private String email;
     private String password;
     private UserEntity.Gender gender;
+
+    public UserRegisterRequestDto(
+            String username,
+            String email,
+            String password,
+            UserEntity.Gender gender
+    ) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+    }
 }
