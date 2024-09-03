@@ -22,7 +22,7 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
@@ -31,16 +31,15 @@ public class BoardService {
         return new BoardResponseDto(saveBoard);
     }
 
-    public Page<BoardResponseDto> getBoards(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Board> boardList = boardRepository.findAllByOrderByCreatedAtDesc(pageable);
-        return boardList.map(BoardResponseDto::new);
+    public List<BoardResponseDto> getBoards(Pageable pageable) {
+        List<Board> boardList = boardRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return boardList.stream().map(BoardResponseDto::new).toList();
     }
 
     @Transactional
     public BoardResponseDto updateBoard(Long id, BoardRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow();
-        board.updateBoard(board);
+        board.updateBoard(requestDto);
         return new BoardResponseDto(board);
     }
 

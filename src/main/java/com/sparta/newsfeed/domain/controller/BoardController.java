@@ -5,7 +5,10 @@ import com.sparta.newsfeed.domain.dto.BoardResponseDto;
 import com.sparta.newsfeed.domain.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -20,10 +23,8 @@ public class BoardController {
     }
 
     @GetMapping("/posts")
-    public Page<BoardResponseDto> getBoards(
-            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
-        return boardService.getBoards(page, size);
+    public List<BoardResponseDto> getBoards(Pageable pageable) {
+        return boardService.getBoards(pageable);
     }
 
     @PutMapping("/posts/{id}")

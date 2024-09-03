@@ -26,12 +26,12 @@ public class Board extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> commentList = new ArrayList<>();
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Comment> commentList = new ArrayList<>();
 
 
     public Board(BoardRequestDto requestDto) {
@@ -40,8 +40,8 @@ public class Board extends Timestamped {
 
     }
 
-    public void updateBoard(Board board) {
-        this.content = board.getContent();
+    public void updateBoard(BoardRequestDto requestDto) {
+        this.content = requestDto.getContent();
 
 
     }

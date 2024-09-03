@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class BoardResponseDto {
 
     private String content;
-    private Long userId;
+//    private Long userId;
     private LocalDateTime createdAt;
 
     public BoardResponseDto(Board saveBoard) {
