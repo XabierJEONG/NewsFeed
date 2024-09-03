@@ -12,13 +12,13 @@ public class UserRegisterResponseDto {
     private final String username;
     private final String email;
     private final UserEntity.Gender gender;
-    private final LocalDateTime createAt;
+    private final LocalDateTime createdAt;
 
-    public UserRegisterResponseDto(Long id, String username, String email, UserEntity.Gender gender, LocalDateTime createAt) {
+    public UserRegisterResponseDto(Long id, String username, String email, UserEntity.Gender gender, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.gender = gender;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
     }
 }

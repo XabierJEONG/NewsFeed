@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.user.controller;
 
+import com.sparta.newsfeed.user.dto.request.WithdrawRequestDto;
 import com.sparta.newsfeed.user.dto.request.LoginRequestDto;
 import com.sparta.newsfeed.user.dto.request.UserRegisterRequestDto;
 import com.sparta.newsfeed.user.dto.response.LoginResponseDto;
@@ -8,11 +9,9 @@ import com.sparta.newsfeed.user.dto.response.UserRegisterResponseDto;
 import com.sparta.newsfeed.user.service.UserService;
 import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import com.sparta.newsfeed.user.util.UserValidationUtil;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +46,15 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request) {
         return ResponseEntity.ok("로그아웃 되었습니다.");
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<String> withdrawUser(@RequestBody WithdrawRequestDto withdrawRequestDto){
+        try{
+            userService.withdrawUser(withdrawRequestDto.getEmail(), withdrawRequestDto.getPassword());
+            return ResponseEntity.ok("회원 탈퇴가 완료되었습니다");
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

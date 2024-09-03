@@ -12,6 +12,7 @@ import com.sparta.newsfeed.user.util.UserValidationUtil;
 import com.sparta.newsfeed.user.validator.EmailValidator;
 import com.sparta.newsfeed.user.validator.PasswordValidator;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -63,5 +64,20 @@ public class UserService {
 
         String token = jwtTokenUtil.generateToken(user);
         return new LoginResponseDto("로그인이 완료되었습니다", token);
+    }
+
+    public void withdrawUser(String email, String password) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        if(user.getStatus() == UserEntity.Status.WITHDRAWN){
+            throw new IllegalArgumentException("이미 탈퇴한 사용자입니다.");
+        }
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        user.setStatus(UserEntity.Status.WITHDRAWN);
+        userRepository.save(user);
     }
 }
