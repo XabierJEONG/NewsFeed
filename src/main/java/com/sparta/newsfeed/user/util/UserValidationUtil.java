@@ -19,9 +19,10 @@ public class UserValidationUtil {
     //로그인 시 아이부 일치여부?
     public UserEntity validateLogin(String email, String password, UserRepository userRepository) {
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty() || !userOptional.get().getPassword().equals(password)) {
+        if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("Invalid email or password");
         }
+
         return userOptional.get();
     }
 }

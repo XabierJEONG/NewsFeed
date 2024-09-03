@@ -20,13 +20,13 @@ public class JwtTokenUtil {
     private Long expiration = 3600000L;
 
     public String generateToken(UserEntity user) {
-        String encodedSecret = Base64.getEncoder().encodeToString(secret.getBytes());
+
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS512, encodedSecret)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 

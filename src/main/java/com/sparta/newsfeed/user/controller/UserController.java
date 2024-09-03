@@ -46,19 +46,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않음");
-        }
-
-        String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰만 추출
-
-        try {
-            jwtTokenUtil.getClaimsFromToken(token);
-            return ResponseEntity.ok("로그아웃이 완료되었습니다");
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰");
-        }
+        return ResponseEntity.ok("로그아웃 되었습니다.");
     }
 }
