@@ -47,4 +47,5 @@ public class FriendRequestController {
         friendRequestService.cancelRequestFriend(userId, friendId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
