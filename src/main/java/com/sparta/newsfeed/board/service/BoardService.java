@@ -1,7 +1,5 @@
 package com.sparta.newsfeed.board.service;
 
-import com.sparta.newsfeed.authfilter.entity.User;
-import com.sparta.newsfeed.authfilter.repository.UserRepository;
 import com.sparta.newsfeed.board.dto.BoardRequestDto;
 import com.sparta.newsfeed.board.dto.BoardResponseDto;
 import com.sparta.newsfeed.board.entity.Board;
@@ -19,7 +17,6 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-//    private final UserRepository userRepository;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
