@@ -7,12 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users")  // 앞에 U -> u 소문자로 변경
 public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 코드 필요없음
@@ -21,19 +21,12 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
     private Long userId;
-
-    @Setter
     @Column(nullable = false, name = "username")
     private String username;
-
-    @Setter
     @Column(nullable = false, unique = true, name = "email" )
     private String email;
-
-    @Setter
     @Column(nullable = false, name = "password")
     private String password;
-
     @Column(nullable = false, name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -63,9 +56,5 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
 
     public enum Status{
         ACTIVE, WITHDRAWN
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }
