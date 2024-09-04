@@ -1,11 +1,11 @@
-package com.sparta.newsfeed.friend.dto.friend;
+package com.sparta.newsfeed.friend.dto.friendRequest.requestDto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class FriendRequestDto {
+public class FriendRequestRequestDto {
     private Long userId;
     private Long friendUserId;
 }

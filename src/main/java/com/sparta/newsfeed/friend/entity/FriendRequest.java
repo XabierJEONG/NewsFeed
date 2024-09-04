@@ -1,12 +1,11 @@
 package com.sparta.newsfeed.friend.entity;
 
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestRequestDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.requestDto.FriendRequestRequestDto;
 import com.sparta.newsfeed.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.catalina.User;
 
 import java.time.LocalDateTime;
 

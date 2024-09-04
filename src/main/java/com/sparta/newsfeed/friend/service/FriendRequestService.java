@@ -1,8 +1,8 @@
 package com.sparta.newsfeed.friend.service;
 
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestReceivedDto;
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestRequestDto;
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestResponseDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.responseDto.FriendRequestReceivedDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.requestDto.FriendRequestRequestDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.responseDto.FriendRequestResponseDto;
 import com.sparta.newsfeed.friend.entity.FriendRequest;
 import com.sparta.newsfeed.friend.repository.FriendRequestRepository;
 import com.sparta.newsfeed.user.entity.UserEntity;
