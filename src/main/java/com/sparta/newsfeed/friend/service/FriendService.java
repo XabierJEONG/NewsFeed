@@ -3,7 +3,6 @@ package com.sparta.newsfeed.friend.service;
 import com.sparta.newsfeed.board.dto.BoardResponseDto;
 import com.sparta.newsfeed.board.entity.Board;
 import com.sparta.newsfeed.board.repository.BoardRepository;
-import com.sparta.newsfeed.friend.dto.friend.requestDto.FriendRequestDto;
 import com.sparta.newsfeed.friend.dto.friend.responseDto.FriendResponseDto;
 import com.sparta.newsfeed.friend.entity.Friend;
 import com.sparta.newsfeed.friend.entity.FriendRequest;
@@ -38,15 +37,15 @@ public class FriendService {
     }
 
     // 친구수락
-    public FriendResponseDto approveFriend(String token, FriendRequestDto requestDto) {
+    public FriendResponseDto approveFriend(String token, Long requestedUserId,Long friendRequestId) {
         Long userId = jwtTokenUtil.getUserIdFromToken(token);
 
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-        UserEntity friendUser = userRepository.findById(requestDto.getFriendUserId()).orElseThrow(() ->
+        UserEntity friendUser = userRepository.findById(requestedUserId).orElseThrow(() ->
                 new IllegalArgumentException("해당 친구 유저가 존재 하지 않습니다."));
 
-        FriendRequest friendRequest = friendRequestRepository.findByUserIdAndFriendUserId(user, friendUser)
+        FriendRequest friendRequest = friendRequestRepository.findByFriendRequestId(friendRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("친구 요청이 존재하지 않습니다."));
 
         if (friendRequest.getStatus() != FriendRequest.Status.WAIT) {
@@ -78,17 +77,17 @@ public class FriendService {
     }
 
     // 친구 삭제
-    public void deletFriend(String token, Long friendId) {
+    public void deleteFriend(String token, Long id) {
         Long userId = jwtTokenUtil.getUserIdFromToken(token);
 
-        UserEntity user = userRepository.findById(userId).orElseThrow(() ->
+        UserEntity user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
-        Friend friend = friendRepository.findById(friendId).orElseThrow(() ->
+        Friend friend = friendRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저는 친구가 아닙니다."));
 
         if (!friend.getUserId().getUserId().equals(userId)) {
-            throw new IllegalArgumentException("본인은 삭제할 수 없습니다.");
+            throw new IllegalArgumentException("삭제할 수 없습니다.");
         }
         friendRepository.delete(friend);
     }
@@ -112,7 +111,7 @@ public class FriendService {
         }
 
         // 친구인 경우 게시글 조회
-        Page<Board> boardPage = boardRepository.findByUser(friendUser, pageable);
+        Page<Board> boardPage = boardRepository.findByUserOrderByModifiedAtDesc(friendUser, pageable);
 
         List<BoardResponseDto> boardDtos = boardPage.getContent().stream()
                 .map(BoardResponseDto::new) // 생성자를 통해 변환

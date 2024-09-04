@@ -39,7 +39,7 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
     private Status status = Status.ACTIVE;
 
     // 친구관련 추가(진호)
-    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany (mappedBy = "requestedUserId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendRequest> friendRequests = new ArrayList<>();
 
     public UserEntity(String username, String email, String password, Gender gender) {

@@ -14,5 +14,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     List<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    Page<Board> findByUser(UserEntity user, Pageable pageable);
+    Page<Board> findByUserOrderByModifiedAtDesc(UserEntity user, Pageable pageable);
 }

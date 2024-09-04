@@ -22,12 +22,12 @@ public class FriendRequest{
     private Long friendRequestId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
-    private UserEntity userId; // 신청한 사용자
+    @JoinColumn(name = "requestedUserId", nullable = false)
+    private UserEntity requestedUserId; // 신청한 사용자
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friendUserId", nullable = false)
-    private UserEntity friendUserId; // 신청받은 사용자
+    @JoinColumn(name = "receivedUserId", nullable = false)
+    private UserEntity receivedUserId; // 신청받은 사용자
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -44,8 +44,8 @@ public class FriendRequest{
     }
 
     public FriendRequest(UserEntity user, UserEntity friendUser, FriendRequestRequestDto requestDto) {
-        this.userId = user;
-        this.friendUserId = friendUser;
+        this.requestedUserId = user;
+        this.receivedUserId = friendUser;
         this.status = Status.WAIT;
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
