@@ -1,8 +1,14 @@
 package com.sparta.newsfeed.user.controller;
 
-import com.sparta.newsfeed.user.dto.UserRequestDto;
-import com.sparta.newsfeed.user.entity.Users;
+import com.sparta.newsfeed.user.dto.request.WithdrawRequestDto;
+import com.sparta.newsfeed.user.dto.request.LoginRequestDto;
+import com.sparta.newsfeed.user.dto.request.UserRegisterRequestDto;
+import com.sparta.newsfeed.user.dto.response.LoginResponseDto;
+import com.sparta.newsfeed.user.dto.response.UserRegisterResponseDto;
 import com.sparta.newsfeed.user.service.UserService;
+import com.sparta.newsfeed.user.util.JwtTokenUtil;
+import com.sparta.newsfeed.user.util.UserValidationUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,34 +17,46 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
+
     private final UserService userService;
+    private JwtTokenUtil jwtTokenUtil;
+    private final UserValidationUtil userValidationUtil;
 
-
-    //자신의 프로필 조회
-    @GetMapping("/me")
-    public ResponseEntity<Users> getMe(@RequestParam Long userId) {
-        Users users = userService.getUser(userId, userId);
-        return ResponseEntity.ok(users);
+    @PostMapping("/register")
+    public ResponseEntity<String> userRegister(@RequestBody UserRegisterRequestDto userRegisterRequestDto){
+        try{
+            //회원가입
+            UserRegisterResponseDto userRegisterResponseDto = userService.userRegiser(userRegisterRequestDto);
+            return ResponseEntity.ok("사용자가 등록되었습니다.");
+        }
+        //회원가입 실패 시
+        catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    //다른 사람의 프로필 조회
-    @GetMapping("/{otherUserId}")
-    public ResponseEntity<Users> getOtherUser(@PathVariable Long otherUserId, Long userId) {
-        Users users = userService.getUser(userId, otherUserId);
-        return ResponseEntity.ok(users);
+    @PostMapping("/login")
+    public LoginResponseDto loginUser(@RequestBody LoginRequestDto loginRequestDto) {
+        //로그인
+        return userService.loginUser(loginRequestDto);
     }
 
-    //프로필 수정
-    @PutMapping("/me")
-    public ResponseEntity<String> updateMe(
-            @RequestParam Long userId,
-            @RequestBody UserRequestDto userRequestDto
-            ) {
-        boolean result = userService.updateUser(userId, userRequestDto.getCurrentPassword(),userRequestDto.getNewPassword(), userRequestDto.getUserName(), userRequestDto.getEmail());
-        if (result) {
-            return ResponseEntity.ok("프로필이 업데이트되었습니다.");
-        } else {
-            return ResponseEntity.badRequest().body("프로필 업데이트에 실패하였습니다.");
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutUser(HttpServletRequest request) {
+        //로그아웃 (세션 기반)
+        request.getSession().invalidate();
+        return ResponseEntity.ok("로그아웃 되었습니다.");
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<String> withdrawUser(@RequestBody WithdrawRequestDto withdrawRequestDto){
+        try{
+            userService.withdrawUser(withdrawRequestDto.getEmail(), withdrawRequestDto.getPassword());
+            return ResponseEntity.ok("회원 탈퇴가 완료되었습니다");
+        }
+        //회원 탈퇴 시
+        catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
