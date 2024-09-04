@@ -1,4 +1,4 @@
-package com.sparta.newsfeed.domain.exception;
+package com.sparta.newsfeed.board.exception;
 
 public class CustomException extends RuntimeException {
 
