@@ -15,8 +15,8 @@ public class BoardResponseDto {
     private String content;
     private LocalDateTime createdAt;
 
-    public BoardResponseDto(Board saveBoard) {
-        this.content = saveBoard.getContent();
-        this.createdAt = saveBoard.getCreatedAt();
+    public BoardResponseDto(Board Board) {
+        this.content = Board.getContent();
+        this.createdAt = Board.getCreatedAt();
     }
 }

@@ -35,10 +35,8 @@ public class Board extends Timestamped {
         this.user = user;
     }
 
-    public void updateBoard(BoardRequestDto requestDto, UserEntity user) {
+    public void update(BoardRequestDto requestDto, UserEntity user) {
         this.content = requestDto.getContent();
         this.user = user;
-
     }
-
 }
