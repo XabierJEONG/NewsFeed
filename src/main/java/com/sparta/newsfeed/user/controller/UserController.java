@@ -1,10 +1,15 @@
 package com.sparta.newsfeed.user.controller;
 
+<<<<<<< Updated upstream
 import com.sparta.newsfeed.user.dto.request.WithdrawRequestDto;
 import com.sparta.newsfeed.user.dto.request.LoginRequestDto;
 import com.sparta.newsfeed.user.dto.request.UserRegisterRequestDto;
 import com.sparta.newsfeed.user.dto.response.LoginResponseDto;
 import com.sparta.newsfeed.user.dto.response.UserRegisterResponseDto;
+=======
+import com.sparta.newsfeed.user.dto.UserRequestDto;
+import com.sparta.newsfeed.user.entity.UserEntity;
+>>>>>>> Stashed changes
 import com.sparta.newsfeed.user.service.UserService;
 import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import com.sparta.newsfeed.user.util.UserValidationUtil;
@@ -22,6 +27,7 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
     private final UserValidationUtil userValidationUtil;
 
+<<<<<<< Updated upstream
     @PostMapping("/register")
     public ResponseEntity<String> userRegister(@RequestBody UserRegisterRequestDto userRegisterRequestDto){
         try{
@@ -39,6 +45,21 @@ public class UserController {
     public LoginResponseDto loginUser(@RequestBody LoginRequestDto loginRequestDto) {
         //로그인
         return userService.loginUser(loginRequestDto);
+=======
+
+    //자신의 프로필 조회
+    @GetMapping("/me")
+    public ResponseEntity<UserEntity> getMe(@RequestParam Long userId) {
+        UserEntity users = userService.getUser(userId, userId);
+        return ResponseEntity.ok(users);
+    }
+
+    //다른 사람의 프로필 조회
+    @GetMapping("/{otherUserId}")
+    public ResponseEntity<UserEntity> getOtherUser(@PathVariable Long otherUserId, Long userId) {
+        UserEntity userEntity = userService.getUser(userId, otherUserId);
+        return ResponseEntity.ok(userEntity);
+>>>>>>> Stashed changes
     }
 
     @PostMapping("/logout")

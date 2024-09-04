@@ -1,6 +1,5 @@
 package com.sparta.newsfeed.user.dto;
 
-import com.sparta.newsfeed.user.entity.Users;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -3,10 +3,19 @@ package com.sparta.newsfeed.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+<<<<<<< Updated upstream
+=======
+import lombok.Setter;
+
+>>>>>>> Stashed changes
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+<<<<<<< Updated upstream
+=======
+@Setter //UserService에서 사용 - 민경
+>>>>>>> Stashed changes
 @NoArgsConstructor
 @Table(name = "Users")
 public class UserEntity {
@@ -31,6 +40,10 @@ public class UserEntity {
     @Column(nullable = false, name = "modifiedAt")
     private LocalDateTime modifiedAt;
 
+<<<<<<< Updated upstream
+=======
+    @Setter
+>>>>>>> Stashed changes
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
@@ -64,7 +77,11 @@ public class UserEntity {
         ACTIVE, WITHDRAWN
     }
 
+<<<<<<< Updated upstream
     public void setStatus(Status status) {
         this.status = status;
     }
 }
+=======
+}
+>>>>>>> Stashed changes
