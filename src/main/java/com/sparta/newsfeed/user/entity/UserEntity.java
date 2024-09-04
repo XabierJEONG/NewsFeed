@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +57,4 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
     public enum Status{
         ACTIVE, WITHDRAWN
     }
-
-
 }
