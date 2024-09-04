@@ -1,10 +1,9 @@
-package com.sparta.newsfeed.domain.controller;
+package com.sparta.newsfeed.board.controller;
 
-import com.sparta.newsfeed.domain.dto.BoardRequestDto;
-import com.sparta.newsfeed.domain.dto.BoardResponseDto;
-import com.sparta.newsfeed.domain.service.BoardService;
+import com.sparta.newsfeed.board.dto.BoardRequestDto;
+import com.sparta.newsfeed.board.dto.BoardResponseDto;
+import com.sparta.newsfeed.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 

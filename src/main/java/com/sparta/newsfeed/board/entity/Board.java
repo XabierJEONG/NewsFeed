@@ -1,16 +1,12 @@
-package com.sparta.newsfeed.domain.entity;
+package com.sparta.newsfeed.board.entity;
 
 import com.sparta.newsfeed.authfilter.entity.User;
-import com.sparta.newsfeed.domain.dto.BoardRequestDto;
-import com.sparta.newsfeed.domain.dto.BoardResponseDto;
+import com.sparta.newsfeed.board.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table
