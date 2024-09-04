@@ -1,6 +1,5 @@
 package com.sparta.newsfeed.board.entity;
 
-import com.sparta.newsfeed.authfilter.entity.User;
 import com.sparta.newsfeed.board.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
