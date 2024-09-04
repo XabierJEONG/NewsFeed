@@ -19,20 +19,11 @@ repositories {
     mavenCentral()
 }
 dependencies {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     implementation 'at.favre.lib:bcrypt:0.10.2'
     implementation 'mysql:mysql-connector-java:8.0.32'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 //    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
-//    implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
-<<<<<<< Updated upstream
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-=======
-//    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
->>>>>>> Stashed changes
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -43,11 +34,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     tasks.named('test') {
         useJUnitPlatform()
     }

@@ -1,13 +1,10 @@
 package com.sparta.newsfeed.user.service;
 
-<<<<<<< Updated upstream
 import com.sparta.newsfeed.user.config.PasswordEncoder;
 import com.sparta.newsfeed.user.dto.request.LoginRequestDto;
 import com.sparta.newsfeed.user.dto.request.UserRegisterRequestDto;
 import com.sparta.newsfeed.user.dto.response.LoginResponseDto;
 import com.sparta.newsfeed.user.dto.response.UserRegisterResponseDto;
-=======
->>>>>>> Stashed changes
 import com.sparta.newsfeed.user.entity.UserEntity;
 import com.sparta.newsfeed.user.repository.UserRepository;
 import com.sparta.newsfeed.user.util.JwtTokenUtil;
@@ -17,12 +14,13 @@ import com.sparta.newsfeed.user.validator.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-<<<<<<< Updated upstream
     private final UserValidationUtil userValidationUtil;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
@@ -66,10 +64,16 @@ public class UserService {
         //암호화된 비밀번호가 일치하는지 확인
         if(!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호입니다");
-=======
+        }
+        //비밀번호 일치하면 토큰 생성
+        String token = jwtTokenUtil.generateToken(user);
+        //로그인 성공 메세지 및 토큰
+        return new LoginResponseDto("로그인이 완료되었습니다", token);
+    }
+
     //다른 사용자 또는 자신의 프로필 조회
     public UserEntity getUser(Long viewerId, Long otherUserId) {
-        Optional<UserEntity> optionalUser = userRepository.findById(otherUserId);
+        Optional<UserEntity> optionalUser = userRepository.findByUserId(otherUserId);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
@@ -82,9 +86,9 @@ public class UserService {
         return otherUserEntity;
     }
     //사용자 정보 업데이트
-    public boolean updateUser(Long userId, String currentPassword, String newPassword, String newEmail, String newUserName) {
+    public LoginResponseDto updateUser(Long userId, String currentPassword, String newPassword, String newEmail, String newUserName) {
         //데이터베이스에서 사용자 조회
-        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        Optional<UserEntity> optionalUser = userRepository.findByUserId(userId);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
@@ -92,13 +96,12 @@ public class UserService {
         //현재 비밀번호 확인
         if (!currentUserEntity.getPassword().equals(currentPassword)) {
             System.out.println("현재 비밀번호가 일치하지 않습니다.");
-            return false;
->>>>>>> Stashed changes
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
         //비밀번호 일치하면 토큰 생성
-        String token = jwtTokenUtil.generateToken(user);
+        String token = jwtTokenUtil.generateToken(currentUserEntity);
         //로그인 성공 메세지 및 토큰
-        return new LoginResponseDto("로그인이 완료되었습니다", token);
+         return new LoginResponseDto("로그인이 완료되었습니다", token);
     }
 
     public void withdrawUser(String email, String password) {
@@ -112,18 +115,9 @@ public class UserService {
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-<<<<<<< Updated upstream
         //탈퇴 상태로 변경
         user.setStatus(UserEntity.Status.WITHDRAWN);
         userRepository.save(user);
-=======
-
-        currentUserEntity.setPassword(newPassword);
-        currentUserEntity.setUsername(newUserName);
-        currentUserEntity.setEmail(newEmail);
-        //변경된 사용자 정보 데이터베이스에 저장
-        userRepository.save(currentUserEntity);
-        return true;
->>>>>>> Stashed changes
     }
 }
+
