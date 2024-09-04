@@ -8,25 +8,27 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "Users")
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, name = "UserName")
+    @Column(name = "userId")
+    private Long userId;
+    @Column(nullable = false, name = "username")
     private String username;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "email" )
     private String email;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "password")
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(nullable = true)
+    @Column(nullable = true, name = "introduce")
     private String introduce;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "createdAt")
     private LocalDateTime createdAt;
-    @Column(nullable = false, insertable = false)
+    @Column(nullable = false, name = "modifiedAt")
     private LocalDateTime modifiedAt;
 
     @Enumerated(EnumType.STRING)
@@ -39,11 +41,14 @@ public class UserEntity {
         this.password = password;
         this.gender = gender;
         this.status = Status.ACTIVE;
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
     }
 
     @PrePersist
     public void onCreate(){
         this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
     }
 
     @PreUpdate
