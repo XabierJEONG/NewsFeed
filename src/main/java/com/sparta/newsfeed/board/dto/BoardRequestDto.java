@@ -6,6 +6,5 @@ import lombok.Getter;
 public class BoardRequestDto {
 
     private String content;
-
-
+    private Long userId;
 }
