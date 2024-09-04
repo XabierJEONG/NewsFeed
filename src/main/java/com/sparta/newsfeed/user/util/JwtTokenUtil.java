@@ -20,6 +20,7 @@ public class JwtTokenUtil {
     public String generateToken(UserEntity user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("userId", user.getUserId()) // userId 클레임추가(진호)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -31,5 +32,11 @@ public class JwtTokenUtil {
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    // userId 추출메서드(진호)
+    public Long getUserIdFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.get("userId", Long.class);// Long타입으로 추
     }
 }
