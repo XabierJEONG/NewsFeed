@@ -1,7 +1,6 @@
-package com.sparta.newsfeed.domain.repository;
+package com.sparta.newsfeed.board.repository;
 
-import com.sparta.newsfeed.domain.entity.Board;
-import org.springframework.data.domain.Page;
+import com.sparta.newsfeed.board.entity.Board;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

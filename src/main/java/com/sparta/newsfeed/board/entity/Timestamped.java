@@ -1,4 +1,4 @@
-package com.sparta.newsfeed.domain.entity;
+package com.sparta.newsfeed.board.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
