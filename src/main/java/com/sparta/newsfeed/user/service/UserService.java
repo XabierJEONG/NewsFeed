@@ -46,7 +46,7 @@ public class UserService {
         UserEntity savedUser = userRepository.save(user);
 
         return new UserRegisterResponseDto(
-                savedUser.getId(),
+                savedUser.getUserId(),
                 savedUser.getUsername(),
                 savedUser.getEmail(),
                 savedUser.getGender(),
