@@ -1,4 +1,4 @@
 package com.sparta.newsfeed.friend.controller;
 
-public class FriendsController {
+public class FriendController {
 }

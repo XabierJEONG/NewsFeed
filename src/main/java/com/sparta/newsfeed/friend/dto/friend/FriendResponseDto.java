@@ -1,4 +1,4 @@
-package com.sparta.newsfeed.friend.dto.friends;
+package com.sparta.newsfeed.friend.dto.friend;
 
 import java.time.LocalDateTime;
 
