@@ -4,6 +4,8 @@ import com.sparta.newsfeed.board.dto.BoardRequestDto;
 import com.sparta.newsfeed.board.dto.BoardResponseDto;
 import com.sparta.newsfeed.board.entity.Board;
 import com.sparta.newsfeed.board.repository.BoardRepository;
+import com.sparta.newsfeed.user.entity.UserEntity;
+import com.sparta.newsfeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,12 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-//        User findUser = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-        Board saveBoard = boardRepository.save(new Board(requestDto));
+        UserEntity userEntity = userRepository.findById(requestDto.getUserId()).orElseThrow();
+        Board saveBoard = boardRepository.save(new Board(requestDto, userEntity));
         return new BoardResponseDto(saveBoard);
     }
 
@@ -32,8 +35,9 @@ public class BoardService {
 
     @Transactional
     public BoardResponseDto updateBoard(Long id, BoardRequestDto requestDto) {
+        UserEntity userEntity = userRepository.findById(requestDto.getUserId()).orElseThrow();
         Board board = boardRepository.findById(id).orElseThrow();
-        board.updateBoard(requestDto);
+        board.updateBoard(requestDto, userEntity);
         return new BoardResponseDto(board);
     }
 

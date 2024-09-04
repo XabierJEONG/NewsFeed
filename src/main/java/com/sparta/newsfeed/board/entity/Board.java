@@ -1,6 +1,7 @@
 package com.sparta.newsfeed.board.entity;
 
 import com.sparta.newsfeed.board.dto.BoardRequestDto;
+import com.sparta.newsfeed.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,23 +22,22 @@ public class Board extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private UserEntity user;
 
 //    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Comment> commentList = new ArrayList<>();
 
 
-    public Board(BoardRequestDto requestDto) {
+    public Board(BoardRequestDto requestDto, UserEntity user) {
         this.content = requestDto.getContent();
-//        this.user = user;
-
+        this.user = user;
     }
 
-    public void updateBoard(BoardRequestDto requestDto) {
+    public void updateBoard(BoardRequestDto requestDto, UserEntity user) {
         this.content = requestDto.getContent();
-
+        this.user = user;
 
     }
 

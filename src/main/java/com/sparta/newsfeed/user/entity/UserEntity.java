@@ -1,32 +1,25 @@
 package com.sparta.newsfeed.user.entity;
 
-import com.sparta.newsfeed.friend.entity.Friend;
-import com.sparta.newsfeed.friend.entity.FriendRequest;
+import com.sparta.newsfeed.board.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "Users")
-public class UserEntity {
+@Table(name = "users")  // 앞에 U -> u 소문자로 변경
+public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 코드 필요없음
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
     private Long userId;
-    @Setter
     @Column(nullable = false, name = "username")
     private String username;
-    @Setter
-    @Column(nullable = false, unique = true, name = "email")
+    @Column(nullable = false, unique = true, name = "email" )
     private String email;
-    @Setter
     @Column(nullable = false, name = "password")
     private String password;
     @Column(nullable = false, name = "gender")
@@ -34,21 +27,10 @@ public class UserEntity {
     private Gender gender;
     @Column(nullable = true, name = "introduce")
     private String introduce;
-    @Column(nullable = false, name = "createdAt")
-    private LocalDateTime createdAt;
-    @Column(nullable = false, name = "modifiedAt")
-    private LocalDateTime modifiedAt;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
-
-
-    // 친구관련 추가
-    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FriendRequest> friendRequests = new ArrayList<>();
-
 
     public UserEntity(String username, String email, String password, Gender gender) {
         this.username = username;
@@ -56,28 +38,13 @@ public class UserEntity {
         this.password = password;
         this.gender = gender;
         this.status = Status.ACTIVE;
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
     }
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void onUpdate() {
-        this.modifiedAt = LocalDateTime.now();
-    }
-
-
 
     public enum Gender {
         MALE, FEMALE
     }
 
-    public enum Status {
+    public enum Status{
         ACTIVE, WITHDRAWN
     }
 
