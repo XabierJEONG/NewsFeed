@@ -1,12 +1,11 @@
 package com.sparta.newsfeed.friend.entity;
 
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestRequestDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.requestDto.FriendRequestRequestDto;
 import com.sparta.newsfeed.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.catalina.User;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "FriendRequest")
 @NoArgsConstructor
 public class FriendRequest{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "friendrequestId")
@@ -53,6 +53,9 @@ public class FriendRequest{
 
     public void reject() {
         this.status = Status.REJECT;
+    }
+    public void approve() {
+        this.status = Status.APPROVAL;
     }
 
 }
