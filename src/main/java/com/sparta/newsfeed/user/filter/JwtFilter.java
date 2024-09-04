@@ -1,13 +1,11 @@
 package com.sparta.newsfeed.user.filter;
 
 import com.sparta.newsfeed.user.util.JwtTokenUtil;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,13 +14,11 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
     public JwtFilter(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }
-
 
     @Override
     protected void doFilterInternal(
@@ -35,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             try{
+                //토큰 클레임 검증
                 jwtTokenUtil.getClaimsFromToken(token);
             } catch (JwtException e){
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰");

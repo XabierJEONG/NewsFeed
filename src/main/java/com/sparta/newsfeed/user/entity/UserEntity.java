@@ -3,8 +3,6 @@ package com.sparta.newsfeed.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-
 import java.time.LocalDateTime;
 
 @Entity

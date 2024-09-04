@@ -5,13 +5,11 @@ import com.sparta.newsfeed.user.dto.request.LoginRequestDto;
 import com.sparta.newsfeed.user.dto.request.UserRegisterRequestDto;
 import com.sparta.newsfeed.user.dto.response.LoginResponseDto;
 import com.sparta.newsfeed.user.dto.response.UserRegisterResponseDto;
-
 import com.sparta.newsfeed.user.service.UserService;
 import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import com.sparta.newsfeed.user.util.UserValidationUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,19 +18,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
     private final UserService userService;
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @Autowired
     private final UserValidationUtil userValidationUtil;
 
     @PostMapping("/register")
     public ResponseEntity<String> userRegister(@RequestBody UserRegisterRequestDto userRegisterRequestDto){
         try{
+            //회원가입
             UserRegisterResponseDto userRegisterResponseDto = userService.userRegiser(userRegisterRequestDto);
             return ResponseEntity.ok("사용자가 등록되었습니다.");
         }
+        //회원가입 실패 시
         catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -40,11 +37,14 @@ public class UserController {
 
     @PostMapping("/login")
     public LoginResponseDto loginUser(@RequestBody LoginRequestDto loginRequestDto) {
+        //로그인
         return userService.loginUser(loginRequestDto);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request) {
+        //로그아웃 (세션 기반)
+        request.getSession().invalidate();
         return ResponseEntity.ok("로그아웃 되었습니다.");
     }
 
@@ -53,7 +53,9 @@ public class UserController {
         try{
             userService.withdrawUser(withdrawRequestDto.getEmail(), withdrawRequestDto.getPassword());
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다");
-        } catch (IllegalArgumentException e){
+        }
+        //회원 탈퇴 시
+        catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
