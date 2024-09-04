@@ -4,10 +4,11 @@ import com.sparta.newsfeed.board.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users")  // 앞에 U -> u 소문자로 변경
 public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 코드 필요없음
@@ -48,7 +49,5 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
         ACTIVE, WITHDRAWN
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+
 }
