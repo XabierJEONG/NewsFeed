@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.friend.entity;
 
+import com.sparta.newsfeed.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,14 @@ import lombok.Setter;
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "userId", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private UserEntity userId;
 
-    @Column(name = "friendUserId", nullable = false)
-    private Long friendUserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "friendUserId", nullable = false)
+    private UserEntity friendUserId;
 }

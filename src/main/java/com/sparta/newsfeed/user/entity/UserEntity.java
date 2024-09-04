@@ -1,9 +1,13 @@
 package com.sparta.newsfeed.user.entity;
 
+import com.sparta.newsfeed.friend.entity.Friend;
+import com.sparta.newsfeed.friend.entity.FriendRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +38,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
+
+
+    // 친구관련 추가
+    @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FriendRequest> friendRequests = new ArrayList<>();
+
 
     public UserEntity(String username, String email, String password, Gender gender) {
         this.username = username;

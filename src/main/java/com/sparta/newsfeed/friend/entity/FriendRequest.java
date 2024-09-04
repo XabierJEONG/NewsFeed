@@ -1,10 +1,13 @@
 package com.sparta.newsfeed.friend.entity;
 
 import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestRequestDto;
+import com.sparta.newsfeed.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.catalina.User;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,15 +21,13 @@ public class FriendRequest{
     @Column(name = "friendrequestId")
     private Long friendRequestId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "userId", nullable = false)
-    @Column(name = "userId", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private UserEntity userId; // 신청한 사용자
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "friendUserId", nullable = false)
-    @Column(name = "friendUserId", nullable = false)
-    private Long friendUserId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "friendUserId", nullable = false)
+    private UserEntity friendUserId; // 신청받은 사용자
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -42,9 +43,9 @@ public class FriendRequest{
         APPROVAL, WAIT, REJECT
     }
 
-    public FriendRequest(Long userId, FriendRequestRequestDto requestDto) {
-        this.userId = userId;
-        this.friendUserId = requestDto.getFriendUserId();
+    public FriendRequest(UserEntity user, UserEntity friendUser, FriendRequestRequestDto requestDto) {
+        this.userId = user;
+        this.friendUserId = friendUser;
         this.status = Status.WAIT;
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();

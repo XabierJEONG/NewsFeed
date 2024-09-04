@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.friend.controller;
 
+import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestReceivedDto;
 import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestRequestDto;
 import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestResponseDto;
 import com.sparta.newsfeed.friend.service.FriendRequestService;
@@ -19,32 +20,42 @@ public class FriendRequestController {
         this.friendRequestService = friendRequestService;
     }
 
-    // 친구 추가 신청
-    @PostMapping("/{userId}")
-    public ResponseEntity<FriendRequestResponseDto> requestFriend(@PathVariable Long userId,
+    // 친구 요청
+    @PostMapping
+    public ResponseEntity<FriendRequestResponseDto> requestFriend(@RequestHeader("Authorization") String token,
                                                                   @RequestBody FriendRequestRequestDto requestDto) {
-        FriendRequestResponseDto responseDto = friendRequestService.requestFriend(userId,requestDto);
+        FriendRequestResponseDto responseDto = friendRequestService.requestFriend(token, requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
-    // 친구 요청 리스트 조회
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<FriendRequestResponseDto>> inquireRequestFriend(@PathVariable Long userId) {
-        List<FriendRequestResponseDto> reponseDto = friendRequestService.inquireRequestFriend(userId);
+
+    // 신청한 친구 요청 리스트 조회
+    @GetMapping
+    public ResponseEntity<List<FriendRequestResponseDto>> inquireRequestFriend(@RequestHeader("Authorization") String token) {
+        List<FriendRequestResponseDto> reponseDto = friendRequestService.inquireRequestFriend(token);
         return new ResponseEntity<>(reponseDto, HttpStatus.OK);
     }
+
+    // 받은 친구 요청 리스트 조회
+    @GetMapping("/received")
+    public ResponseEntity<List<FriendRequestReceivedDto>> inquireReceivedRequests(@RequestHeader("Authorization") String token) {
+        List<FriendRequestReceivedDto> responseDto = friendRequestService.inquireReceivedRequests(token);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     // 친구 요청 거절
-    @PutMapping("/{userId}/{friendId}")
-    public ResponseEntity<FriendRequestResponseDto> rejectRequestFriend(@PathVariable Long userId,
-                                                    @PathVariable Long friendId,
-                                                    @RequestBody FriendRequestRequestDto requestDto) {
-        FriendRequestResponseDto responseDto = friendRequestService.rejectRequestFriend(userId, friendId, requestDto);
+    @PutMapping("/{friendRequestId}")
+    public ResponseEntity<FriendRequestResponseDto> rejectRequestFriend(@RequestHeader("Authorization") String token,
+                                                                        @PathVariable Long friendRequestId,
+                                                                        @RequestBody FriendRequestRequestDto requestDto) {
+        FriendRequestResponseDto responseDto = friendRequestService.rejectRequestFriend(token, friendRequestId, requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.ACCEPTED);
     }
+
     // 친구 요청 취소
-    @DeleteMapping("/{userId}/{friendId}")
-    public ResponseEntity<Void> cancelRequestFriend(@PathVariable Long userId,
-                                                    @PathVariable Long friendId) {
-        friendRequestService.cancelRequestFriend(userId, friendId);
+    @DeleteMapping("/{friendRequestId}")
+    public ResponseEntity<Void> cancelRequestFriend(@RequestHeader("Authorization") String token,
+                                                    @PathVariable Long friendRequestId) {
+        friendRequestService.cancelRequestFriend(token, friendRequestId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

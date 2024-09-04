@@ -7,18 +7,16 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class FriendRequestResponseDto {
+public class FriendRequestReceivedDto {
     private Long friendRequestId;
-    private Long userId;
-    private Long friendUserId;
+    private Long requestUserId; // 요청한 유저의 ID
     private FriendRequest.Status status;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public FriendRequestResponseDto(FriendRequest friendRequest, UserEntity user, UserEntity friendUser) {
+    public FriendRequestReceivedDto(FriendRequest friendRequest, UserEntity requestUser) {
         this.friendRequestId = friendRequest.getFriendRequestId();
-        this.userId = user.getUserId();
-        this.friendUserId = friendUser.getUserId();
+        this.requestUserId = requestUser.getUserId();
         this.status = friendRequest.getStatus();
         this.createdAt = friendRequest.getCreatedAt();
         this.modifiedAt = friendRequest.getModifiedAt();
