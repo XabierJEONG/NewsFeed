@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.user.entity;
 
+import com.sparta.newsfeed.board.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "Users")
-public class UserEntity {
+@Table(name = "users")  // 앞에 U -> u 소문자로 변경
+public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 코드 필요없음
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +27,6 @@ public class UserEntity {
     private Gender gender;
     @Column(nullable = true, name = "introduce")
     private String introduce;
-    @Column(nullable = false, name = "createdAt")
-    private LocalDateTime createdAt;
-    @Column(nullable = false, name = "modifiedAt")
-    private LocalDateTime modifiedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -41,19 +38,6 @@ public class UserEntity {
         this.password = password;
         this.gender = gender;
         this.status = Status.ACTIVE;
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
-    }
-
-    @PrePersist
-    public void onCreate(){
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void onUpdate(){
-        this.modifiedAt = LocalDateTime.now();
     }
 
     public enum Gender {

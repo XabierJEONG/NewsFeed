@@ -1,6 +1,6 @@
-package com.sparta.newsfeed.domain.dto;
+package com.sparta.newsfeed.board.dto;
 
-import com.sparta.newsfeed.domain.entity.Board;
+import com.sparta.newsfeed.board.entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class BoardResponseDto {
 
     private String content;
-//    private Long userId;
     private LocalDateTime createdAt;
 
     public BoardResponseDto(Board saveBoard) {
