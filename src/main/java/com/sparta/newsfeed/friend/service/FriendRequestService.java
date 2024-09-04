@@ -42,7 +42,7 @@ public class FriendRequestService {
             throw new IllegalArgumentException("본인을 친구로 추가할 수 없습니다.");
         }
 
-        Optional<FriendRequest> checkAlreadyRequest = friendRequestRepository.findByUserIdAndFriendUserId(user, friendUser);
+        Optional<FriendRequest> checkAlreadyRequest = friendRequestRepository.findByRequestedUserIdAndReceivedUserId(user, friendUser);
         if (checkAlreadyRequest.isPresent()) {
             throw new IllegalArgumentException("해당 친구는 이미 요청을 보냈습니다.");
         }
@@ -59,10 +59,10 @@ public class FriendRequestService {
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
-        List<FriendRequest> friendRequests = friendRequestRepository.findByUserId(user);
+        List<FriendRequest> friendRequests = friendRequestRepository.findByRequestedUserId(user);
         return friendRequests.stream()
                 .map(request -> {
-                    UserEntity friendUser = userRepository.findById(request.getFriendUserId().getUserId())
+                    UserEntity friendUser = userRepository.findById(request.getReceivedUserId().getUserId())
                             .orElseThrow(() -> new IllegalArgumentException("친구 유저가 존재하지 않습니다."));
                     return new FriendRequestResponseDto(request, user, friendUser);
                 }).toList();
@@ -75,10 +75,10 @@ public class FriendRequestService {
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
-        List<FriendRequest> receivedRequests = friendRequestRepository.findByFriendUserId(user);
+        List<FriendRequest> receivedRequests = friendRequestRepository.findByReceivedUserId(user);
         return receivedRequests.stream()
                 .map(request -> {
-                    UserEntity requestUser = userRepository.findById(request.getUserId().getUserId())
+                    UserEntity requestUser = userRepository.findById(request.getRequestedUserId().getUserId())
                             .orElseThrow(() -> new IllegalArgumentException("요청한 유저가 존재하지 않습니다."));
                     return new FriendRequestReceivedDto(request, requestUser);
                 })
@@ -95,14 +95,14 @@ public class FriendRequestService {
         FriendRequest friendRequest = friendRequestRepository.findById(friendRequestId).orElseThrow(() ->
                 new IllegalArgumentException("해당 친구 요청이 존재하지 않습니다."));
 
-        if (!friendRequest.getFriendUserId().getUserId().equals(userId)) {
+        if (!friendRequest.getReceivedUserId().getUserId().equals(userId)) {
             throw new IllegalArgumentException("해당 요청은 본인이 받은 요청이 아닙니다.");
         }
 
         friendRequest.reject();
         friendRequestRepository.save(friendRequest);
 
-        return new FriendRequestResponseDto(friendRequest, user, friendRequest.getUserId());
+        return new FriendRequestResponseDto(friendRequest, user, friendRequest.getRequestedUserId());
     }
 
 
@@ -116,7 +116,7 @@ public class FriendRequestService {
         FriendRequest friendRequest = friendRequestRepository.findById(friendRequestId).orElseThrow(() ->
                 new IllegalArgumentException("해당 친구 요청이 존재하지 않습니다."));
 
-        if (!friendRequest.getUserId().getUserId().equals(userId)) {
+        if (!friendRequest.getRequestedUserId().getUserId().equals(userId)) {
             throw new IllegalArgumentException("본인의 친구 요청이 아닙니다.");
         }
 
