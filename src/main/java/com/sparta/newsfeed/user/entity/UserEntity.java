@@ -45,7 +45,7 @@ public class UserEntity {
     private Status status = Status.ACTIVE;
 
 
-    // 친구관련 추가
+    // 친구관련 추가(진호)
     @OneToMany (mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendRequest> friendRequests = new ArrayList<>();
 

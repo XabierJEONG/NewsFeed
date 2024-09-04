@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "FriendRequest")
 @NoArgsConstructor
 public class FriendRequest{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "friendrequestId")
@@ -53,6 +54,9 @@ public class FriendRequest{
 
     public void reject() {
         this.status = Status.REJECT;
+    }
+    public void approve() {
+        this.status = Status.APPROVAL;
     }
 
 }

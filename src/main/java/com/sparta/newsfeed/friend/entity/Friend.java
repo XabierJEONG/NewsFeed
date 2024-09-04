@@ -24,4 +24,9 @@ public class Friend {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friendUserId", nullable = false)
     private UserEntity friendUserId;
+
+    public Friend(UserEntity user, UserEntity friendUser) {
+        this.userId = user;
+        this.friendUserId = friendUser;
+    }
 }

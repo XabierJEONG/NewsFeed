@@ -1,11 +1,19 @@
 package com.sparta.newsfeed.friend.dto.friend;
 
-import java.time.LocalDateTime;
+import com.sparta.newsfeed.friend.entity.Friend;
+import com.sparta.newsfeed.user.entity.UserEntity;
+import lombok.Getter;
 
+import java.time.LocalDateTime;
+@Getter
 public class FriendResponseDto {
     private Long id;
     private Long userId;
     private Long friendUserId;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+
+    public FriendResponseDto(Friend friend, UserEntity user, UserEntity friendUser) {
+        this.id = friend.getId();
+        this.userId = user.getUserId();
+        this.friendUserId = friendUser.getUserId();
+    }
 }

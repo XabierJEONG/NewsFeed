@@ -37,6 +37,6 @@ public class JwtTokenUtil {
     // userId 추출메서드(진호)
     public Long getUserIdFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
-        return claims.get("userId", Long.class);// Long타입으로 추
+        return claims.get("userId", Long.class);// Long타입으로 추출
     }
 }
