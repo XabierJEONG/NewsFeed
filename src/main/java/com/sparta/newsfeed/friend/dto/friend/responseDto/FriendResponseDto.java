@@ -1,4 +1,4 @@
-package com.sparta.newsfeed.friend.dto.friend;
+package com.sparta.newsfeed.friend.dto.friend.responseDto;
 
 import com.sparta.newsfeed.friend.entity.Friend;
 import com.sparta.newsfeed.user.entity.UserEntity;

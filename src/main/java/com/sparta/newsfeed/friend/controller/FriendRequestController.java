@@ -1,8 +1,8 @@
 package com.sparta.newsfeed.friend.controller;
 
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestReceivedDto;
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestRequestDto;
-import com.sparta.newsfeed.friend.dto.friendRequest.FriendRequestResponseDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.responseDto.FriendRequestReceivedDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.requestDto.FriendRequestRequestDto;
+import com.sparta.newsfeed.friend.dto.friendRequest.responseDto.FriendRequestResponseDto;
 import com.sparta.newsfeed.friend.service.FriendRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +31,8 @@ public class FriendRequestController {
     // 신청한 친구 요청 리스트 조회
     @GetMapping
     public ResponseEntity<List<FriendRequestResponseDto>> inquireRequestFriend(@RequestHeader("Authorization") String token) {
-        List<FriendRequestResponseDto> reponseDto = friendRequestService.inquireRequestFriend(token);
-        return new ResponseEntity<>(reponseDto, HttpStatus.OK);
+        List<FriendRequestResponseDto> responseDto = friendRequestService.inquireRequestFriend(token);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     // 받은 친구 요청 리스트 조회

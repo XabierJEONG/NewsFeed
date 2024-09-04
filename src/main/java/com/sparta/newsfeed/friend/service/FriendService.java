@@ -1,7 +1,10 @@
 package com.sparta.newsfeed.friend.service;
 
-import com.sparta.newsfeed.friend.dto.friend.FriendRequestDto;
-import com.sparta.newsfeed.friend.dto.friend.FriendResponseDto;
+import com.sparta.newsfeed.board.dto.BoardResponseDto;
+import com.sparta.newsfeed.board.entity.Board;
+import com.sparta.newsfeed.board.repository.BoardRepository;
+import com.sparta.newsfeed.friend.dto.friend.requestDto.FriendRequestDto;
+import com.sparta.newsfeed.friend.dto.friend.responseDto.FriendResponseDto;
 import com.sparta.newsfeed.friend.entity.Friend;
 import com.sparta.newsfeed.friend.entity.FriendRequest;
 import com.sparta.newsfeed.friend.repository.FriendRepository;
@@ -10,9 +13,12 @@ import com.sparta.newsfeed.user.entity.UserEntity;
 import com.sparta.newsfeed.user.repository.UserRepository;
 import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,12 +27,14 @@ public class FriendService {
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final BoardRepository boardRepository;
 
-    public FriendService(FriendRepository friendRepository, FriendRequestRepository friendRequestRepository, UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+    public FriendService(FriendRepository friendRepository, FriendRequestRepository friendRequestRepository, UserRepository userRepository, JwtTokenUtil jwtTokenUtil, BoardRepository boardRepository) {
         this.friendRepository = friendRepository;
         this.friendRequestRepository = friendRequestRepository;
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.boardRepository = boardRepository;
     }
 
     // 친구수락
@@ -86,5 +94,31 @@ public class FriendService {
     }
 
     // 친구 피드 조회
+    public Page<BoardResponseDto> inquireFriendBoards(String token, Long friendId, Pageable pageable) {
+        Long userId = jwtTokenUtil.getUserIdFromToken(token);
 
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        UserEntity friendUser = userRepository.findById(friendId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        // 친구 관계 확인
+        boolean isFriend = friendRepository.findByUserIdAndFriendUserId(user, friendUser).isPresent() ||
+                friendRepository.findByUserIdAndFriendUserId(friendUser, user).isPresent();
+
+        if (!isFriend) {
+            throw new IllegalArgumentException("게시글을 조회할 수 있는 권한이 없습니다. 친구가 아닙니다.");
+        }
+
+        // 친구인 경우 게시글 조회
+        Page<Board> boardPage = boardRepository.findByUser(friendUser, pageable);
+
+        List<BoardResponseDto> boardDtos = boardPage.getContent().stream()
+                .map(BoardResponseDto::new) // 생성자를 통해 변환
+                .collect(Collectors.toList());
+
+
+        return new PageImpl<>(boardDtos, pageable, boardPage.getTotalElements());
+    }
 }
