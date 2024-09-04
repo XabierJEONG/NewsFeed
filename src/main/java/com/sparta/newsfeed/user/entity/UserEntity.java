@@ -3,6 +3,7 @@ package com.sparta.newsfeed.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,10 +16,13 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
     private Long userId;
+    @Setter
     @Column(nullable = false, name = "username")
     private String username;
-    @Column(nullable = false, unique = true, name = "email" )
+    @Setter
+    @Column(nullable = false, unique = true, name = "email")
     private String email;
+    @Setter
     @Column(nullable = false, name = "password")
     private String password;
     @Column(nullable = false, name = "gender")
@@ -31,6 +35,7 @@ public class UserEntity {
     @Column(nullable = false, name = "modifiedAt")
     private LocalDateTime modifiedAt;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
@@ -46,21 +51,23 @@ public class UserEntity {
     }
 
     @PrePersist
-    public void onCreate(){
+    public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    public void onUpdate(){
+    public void onUpdate() {
         this.modifiedAt = LocalDateTime.now();
     }
+
+
 
     public enum Gender {
         MALE, FEMALE
     }
 
-    public enum Status{
+    public enum Status {
         ACTIVE, WITHDRAWN
     }
 
