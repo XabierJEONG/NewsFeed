@@ -16,4 +16,9 @@ public class FriendResponseDto {
         this.userId = user.getUserId();
         this.friendUserId = friendUser.getUserId();
     }
+
+    public FriendResponseDto(Friend friend, UserEntity user) {
+        this.id = friend.getId();
+        this.userId = user.getUserId();
+    }
 }
