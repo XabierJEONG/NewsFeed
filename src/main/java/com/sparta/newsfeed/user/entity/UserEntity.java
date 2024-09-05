@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Setter
 @Table(name = "users")  // 앞에 U -> u 소문자로 변경
 public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 코드 필요없음
 
