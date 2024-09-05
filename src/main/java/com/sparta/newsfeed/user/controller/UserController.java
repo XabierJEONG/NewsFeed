@@ -43,15 +43,17 @@ public class UserController {
         return ResponseEntity.ok(otherUser);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(
+            @Auth AuthUser authUser, // AuthUser에서 userId 추출
+            @RequestBody Map<String, Object> updateFields) {
 
-//    @PutMapping("/update")
-//    public ResponseEntity<String> updateUser(
-//            @Auth AuthUser authUser,
-//            @RequestBody Map<String, Object> updateFields) {
-//        Long userId = authUser.getUserId();
-//        userService.updateUser(userId,updateFields);
-//        return ResponseEntity.ok("회원 정보가 수정되었습니다.");
-//    }
+        Long userId = authUser.getUserId();  // userId 추출
+        userService.updateUser(userId, updateFields);  // userId와 updateFields 전달
+
+        return ResponseEntity.ok("회원 정보가 수정되었습니다.");
+    }
+
 
     @DeleteMapping("/withdraw")
     public ResponseEntity<String> withdrawUser (@RequestBody WithdrawRequestDto withdrawRequestDto){
