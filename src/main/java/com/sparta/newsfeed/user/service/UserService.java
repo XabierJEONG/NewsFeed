@@ -42,12 +42,14 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 
-//    public void updateUser(Long userId, Map<String, Object> updateFields) {
-//        //UpdateUtil에서 수정을 원하는 필드만 수정하게 만들어줌
-//        UpdateUtil.updateUserFields(user, updateFields, passwordEncoder);
-//        // 변경된 사용자 정보 저장
-//        userRepository.save(user);
-//    }
+    public void updateUser(Long userId, Map<String, Object> updateFields) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        //UpdateUtil에서 수정을 원하는 필드만 수정하게 만들어줌
+        UpdateUtil.updateUserFields(user, updateFields, passwordEncoder);
+        // 변경된 사용자 정보 저장
+        userRepository.save(user);
+    }
 
     public void withdrawUser(String email, String password) {
         //이메일 조회
