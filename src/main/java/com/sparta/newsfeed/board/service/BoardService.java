@@ -6,7 +6,6 @@ import com.sparta.newsfeed.board.entity.Board;
 import com.sparta.newsfeed.board.repository.BoardRepository;
 import com.sparta.newsfeed.user.entity.UserEntity;
 import com.sparta.newsfeed.user.repository.UserRepository;
-import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +20,9 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final JwtTokenUtil jwtTokenUtil;
 
     @Transactional
-    public BoardResponseDto createBoard(String token, BoardRequestDto requestDto) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+    public BoardResponseDto createBoard(Long userId, BoardRequestDto requestDto) {
         UserEntity findUser = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         Board saveBoard = boardRepository.save(new Board(requestDto, findUser));
@@ -38,8 +35,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto updateBoard(String token, Long id, BoardRequestDto requestDto) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+    public BoardResponseDto updateBoard(Long userId, Long id, BoardRequestDto requestDto) {
 
         UserEntity findUser = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
@@ -52,8 +48,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(String token, Long id) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+    public void deleteBoard(Long userId, Long id) {
         userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 

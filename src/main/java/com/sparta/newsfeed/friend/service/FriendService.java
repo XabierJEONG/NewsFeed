@@ -3,67 +3,75 @@ package com.sparta.newsfeed.friend.service;
 import com.sparta.newsfeed.board.dto.BoardResponseDto;
 import com.sparta.newsfeed.board.entity.Board;
 import com.sparta.newsfeed.board.repository.BoardRepository;
+import com.sparta.newsfeed.friend.dto.friend.requestDto.FriendRequestDto;
 import com.sparta.newsfeed.friend.dto.friend.responseDto.FriendResponseDto;
 import com.sparta.newsfeed.friend.entity.Friend;
 import com.sparta.newsfeed.friend.entity.FriendRequest;
 import com.sparta.newsfeed.friend.repository.FriendRepository;
 import com.sparta.newsfeed.friend.repository.FriendRequestRepository;
+import com.sparta.newsfeed.user.dto.AuthUser;
 import com.sparta.newsfeed.user.entity.UserEntity;
 import com.sparta.newsfeed.user.repository.UserRepository;
-import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class FriendService {
     private final FriendRepository friendRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
-    private final JwtTokenUtil jwtTokenUtil;
     private final BoardRepository boardRepository;
 
-    public FriendService(FriendRepository friendRepository, FriendRequestRepository friendRequestRepository, UserRepository userRepository, JwtTokenUtil jwtTokenUtil, BoardRepository boardRepository) {
-        this.friendRepository = friendRepository;
-        this.friendRequestRepository = friendRequestRepository;
-        this.userRepository = userRepository;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.boardRepository = boardRepository;
-    }
-
     // 친구수락
-    public FriendResponseDto approveFriend(String token, Long requestedUserId,Long friendRequestId) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+    public FriendResponseDto approveFriend(AuthUser authUser, FriendRequestDto friendRequestDto) {
+        // AuthUser에서 userId를 가져옵니다.
+        Long userId = authUser.getUserId();
 
+        // 사용자와 친구 유저 조회
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-        UserEntity friendUser = userRepository.findById(requestedUserId).orElseThrow(() ->
-                new IllegalArgumentException("해당 친구 유저가 존재 하지 않습니다."));
+                new IllegalArgumentException("해당 사용자(" + userId + ")가 존재하지 않습니다."));
 
-        FriendRequest friendRequest = friendRequestRepository.findByFriendRequestId(friendRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("친구 요청이 존재하지 않습니다."));
+        UserEntity friendUser = userRepository.findById(friendRequestDto.getFriendUserId()).orElseThrow(() ->
+                new IllegalArgumentException("해당 친구 유저(" + friendRequestDto.getFriendUserId() + ")가 존재하지 않습니다."));
 
-        if (friendRequest.getStatus() != FriendRequest.Status.WAIT) {
-            throw new IllegalArgumentException("해당 친구 요청은 이미 처리 되었습니다.");
+        // 친구 요청 존재 여부 확인
+        Optional<FriendRequest> optionalFriendRequest = friendRequestRepository.findByRequestedUserIdAndReceivedUserId(friendUser, user);
+
+        if (!optionalFriendRequest.isPresent()) {
+            throw new IllegalArgumentException("해당 친구 요청이 존재하지 않습니다.");
         }
 
+        FriendRequest friendRequest = optionalFriendRequest.get();
+
+        // 친구 요청이 이미 처리된 경우
+        if (friendRequest.getStatus() != FriendRequest.Status.WAIT) {
+            throw new IllegalArgumentException("해당 친구 요청은 이미 처리되었습니다.");
+        }
+
+        // 친구 요청 승인 처리
         friendRequest.approve();
         friendRequestRepository.save(friendRequest);
 
+        // 친구 관계 저장
         Friend friend = new Friend(user, friendUser);
         friendRepository.save(friend);
 
+        // 친구 관계 정보 반환
         return new FriendResponseDto(friend, user, friendUser);
     }
 
     // 친구 목록 조회
-    public List<FriendResponseDto> inquireFriends(String token) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+    public List<FriendResponseDto> inquireFriends(Long userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
@@ -77,8 +85,7 @@ public class FriendService {
     }
 
     // 친구 삭제
-    public void deleteFriend(String token, Long id) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+    public void deleteFriend(Long userId, Long id) {
 
         UserEntity user = userRepository.findByUserId(userId).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
@@ -93,9 +100,7 @@ public class FriendService {
     }
 
     // 친구 피드 조회
-    public Page<BoardResponseDto> inquireFriendBoards(String token, Long friendId, Pageable pageable) {
-        Long userId = jwtTokenUtil.getUserIdFromToken(token);
-
+    public Page<BoardResponseDto> inquireFriendBoards(Long userId, Long friendId, Pageable pageable) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
