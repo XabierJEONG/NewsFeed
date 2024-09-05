@@ -6,13 +6,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Setter
 @Table(name = "users")  // 앞에 U -> u 소문자로 변경
@@ -31,6 +31,7 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
     @Column(nullable = false, name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
     @Column(nullable = true, name = "introduce")
     private String introduce;
 
@@ -39,7 +40,7 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
     private Status status = Status.ACTIVE;
 
     // 친구관련 추가(진호)
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany (mappedBy = "requestedUserId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendRequest> friendRequests = new ArrayList<>();
 
     public UserEntity(String username, String email, String password, Gender gender) {
@@ -56,9 +57,5 @@ public class UserEntity extends Timestamped {  // timestamp 추가하면 아래 
 
     public enum Status{
         ACTIVE, WITHDRAWN
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

@@ -1,4 +1,4 @@
-package com.sparta.newsfeed.friend.dto.friendRequest;
+package com.sparta.newsfeed.friend.dto.friendRequest.requestDto;
 
 import lombok.Getter;
 import lombok.Setter;
