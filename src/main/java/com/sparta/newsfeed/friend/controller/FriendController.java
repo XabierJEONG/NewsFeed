@@ -35,7 +35,7 @@ public class FriendController {
 
     // 친구 목록 조회
     @GetMapping
-    public ResponseEntity<List<FriendResponseDto>> inquierFriends(@Auth AuthUser authUser) {
+    public ResponseEntity<List<FriendResponseDto>> inquireFriends(@Auth AuthUser authUser) {
         Long userId = authUser.getUserId();
         List<FriendResponseDto> responseDto = friendService.inquireFriends(userId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
