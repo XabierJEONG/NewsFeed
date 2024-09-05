@@ -11,6 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
-    List<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
     Page<Board> findByUserOrderByModifiedAtDesc(UserEntity user, Pageable pageable);
 }
