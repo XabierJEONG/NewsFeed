@@ -6,12 +6,13 @@ import com.sparta.newsfeed.board.entity.Board;
 import com.sparta.newsfeed.board.repository.BoardRepository;
 import com.sparta.newsfeed.user.entity.UserEntity;
 import com.sparta.newsfeed.user.repository.UserRepository;
+import com.sparta.newsfeed.user.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,31 +21,45 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        UserEntity userEntity = userRepository.findById(requestDto.getUserId()).orElseThrow();
-        Board saveBoard = boardRepository.save(new Board(requestDto, userEntity));
+    public BoardResponseDto createBoard(String token, BoardRequestDto requestDto) {
+        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+        UserEntity findUser = userRepository.findById(userId).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+        Board saveBoard = boardRepository.save(new Board(requestDto, findUser));
         return new BoardResponseDto(saveBoard);
     }
 
-    public List<BoardResponseDto> getBoards(Pageable pageable) {
-        List<Board> boardList = boardRepository.findAllByOrderByCreatedAtDesc(pageable);
-        return boardList.stream().map(BoardResponseDto::new).toList();
+    public Page<BoardResponseDto> getBoards(Pageable pageable) {
+        Page<Board> boards = boardRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return boards.map(BoardResponseDto::new);
     }
 
     @Transactional
-    public BoardResponseDto updateBoard(Long id, BoardRequestDto requestDto) {
-        UserEntity userEntity = userRepository.findById(requestDto.getUserId()).orElseThrow();
-        Board board = boardRepository.findById(id).orElseThrow();
-        board.updateBoard(requestDto, userEntity);
-        return new BoardResponseDto(board);
+    public BoardResponseDto updateBoard(String token, Long id, BoardRequestDto requestDto) {
+        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+
+        UserEntity findUser = userRepository.findById(userId).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        Board findBoard = boardRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        findBoard.update(requestDto, findUser);
+        return new BoardResponseDto(findBoard);
     }
 
-
     @Transactional
-    public void deleteBoard(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow();
+    public void deleteBoard(String token, Long id) {
+        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+        userRepository.findById(userId).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        Board board = boardRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
         boardRepository.delete(board);
     }
 }
